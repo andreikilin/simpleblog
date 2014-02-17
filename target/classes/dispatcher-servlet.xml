@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+       xmlns:context="http://www.springframework.org/schema/context"  
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" 
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:tx="http://www.springframework.org/schema/tx"  
+       xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans       
+            http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+            http://www.springframework.org/schema/context   
+            http://www.springframework.org/schema/context/spring-context-4.0.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+            http://www.springframework.org/schema/tx
+            http://www.springframework.org/schema/tx/spring-tx-4.0.xsd ">
+    
+    
+    <mvc:annotation-driven />        
+              <!-- Scans for annotated @Controllers in the classpath -->   
+	<context:component-scan base-package="com.simpleblog.controller" />
+	<context:component-scan base-package="com.simpleblog.dao" />
+	<context:component-scan base-package="com.simpleblog.dao.impl" />
+	<context:component-scan base-package="com.simpleblog.entity" />
+	<context:component-scan base-package="com.simpleblog.form" />
+	<context:component-scan base-package="com.simpleblog.service" />
+	<context:component-scan base-package="com.simpleblog.service.impl" />  
+	<context:component-scan base-package="com.simpleblog.validator" />
+    
+	<import resource="spring-security.xml"/>
+	<import resource="spring-roles.xml"/>  
+  
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+		<property name="prefix">  
+    		<value>/WEB-INF/jsp/</value>  
+		</property>  
+    	<property name="suffix">  
+	    	<value>.jsp</value>  
+	    </property>  
+    </bean>  
+    
+  <!--   <bean id="regValidator" class="com.simpleblog.form.RegistrationFormValidator"/>  -->
+    
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="Message" />
+	</bean>
+	
+<!-- 	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+        p:location="classpath:jdbc.properties" />
+ -->   
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/blog_project" />
+        <property name="username" value="blog_u" />
+        <property name="password" value="simpleblog" /> 
+    </bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="com.simpleblog.entity" />
+		<property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.show_sql">true</prop>
+            </props>
+        </property>
+    </bean>
+ 
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    	<property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+      
+</beans>  

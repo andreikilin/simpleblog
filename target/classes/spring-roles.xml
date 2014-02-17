@@ -1,0 +1,22 @@
+<beans  xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="  
+            http://www.springframework.org/schema/beans       
+            http://www.springframework.org/schema/beans/spring-beans-4.0.xsd" >
+
+	<bean id="roleVoter" class="org.springframework.security.access.vote.RoleHierarchyVoter">
+    	<constructor-arg ref="roleHierarchy" />
+	</bean>
+	
+	<bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+	    <property name="hierarchy">
+        	<value>
+	            ROLE_ADMIN > ROLE_MODERATOR
+            	ROLE_MODERATOR > ROLE_WRITER
+	           	ROLE_WRITER > ROLE_USER 
+	           	ROLE_USER > ROLE_GUEST
+    	    </value>
+    	</property>
+	</bean>
+	
+</beans>
